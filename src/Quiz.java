@@ -16,6 +16,10 @@ public class Quiz {
     protected String DEFAULT_NAME = "Anon";
 
     /**
+     * Since each question could have a different number of points need to track max possible
+     */
+    private int maxPossibleScore = 0;
+    /**
      * The questions for this quiz will be held here.
      */
     public ArrayList<Question> quizQuestions = new ArrayList();
@@ -49,7 +53,7 @@ public class Quiz {
         //check how many question instances to create and use a loop to create all questions
         int numQ = questions.length;
         for (int i = 0; i < numQ; i++) {
-            Question newQ = new Question(questions[i], answers[i],2);
+            Question newQ = new Question(questions[i], answers[i], 2);
             quizQuestions.add(newQ);
         }
     }
@@ -78,7 +82,7 @@ public class Quiz {
             total = total + askQuestion(quizQuestions.get(i));
         }
 
-        System.out.println(name + " you scored " + total + "/" + answers.length);
+        System.out.println(name + " you scored " + total + "/" + maxPossibleScore);
     }
 
     /**
@@ -101,11 +105,13 @@ public class Quiz {
             System.out.println("No answer supplied. 0 points");
         } else {
             if (q.isCorrect(answer)) {
-                System.out.println(answer + " is the correct answer. 1 point.");
+                System.out.println(answer + " is the correct answer. " + q.getPoints() + " points.");
                 score = q.getPoints();
             } else {
                 System.out.println(answer + " is the wrong answer. 0 points.");
             }
+            //update maximum possible score
+            maxPossibleScore = maxPossibleScore + q.getPoints();
         }
         return score;
     }
