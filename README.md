@@ -1,5 +1,4 @@
-# nclan.ac.ahart.quiz.Quiz
-Pushing directly from IntelliJ
+# Quiz
 
-Sample code for a nclan.ac.ahart.quiz.Quiz using the Object-Oriented programming paradigm.
-Code pushed from local Git repository to here. 
+Sample code for a Quiz using the Object-Oriented programming paradigm.
+Code pushed from local Git repository created in IntelliJ Community Edition. No command line Git command used. 
