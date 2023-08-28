@@ -49,7 +49,7 @@ public class Quiz {
         //check how many question instances to create and use a loop to create all questions
         int numQ = questions.length;
         for (int i = 0; i < numQ; i++) {
-            Question newQ = new Question(questions[i], answers[i]);
+            Question newQ = new Question(questions[i], answers[i],2);
             quizQuestions.add(newQ);
         }
     }
@@ -102,7 +102,7 @@ public class Quiz {
         } else {
             if (q.isCorrect(answer)) {
                 System.out.println(answer + " is the correct answer. 1 point.");
-                score = 1;
+                score = q.getPoints();
             } else {
                 System.out.println(answer + " is the wrong answer. 0 points.");
             }
