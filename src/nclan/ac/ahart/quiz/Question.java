@@ -1,3 +1,5 @@
+package nclan.ac.ahart.quiz;
+
 /**
  * Class which defines a question.
  *
@@ -12,7 +14,7 @@ public class Question {
     /**
      * Returns the question for this instance.
      *
-     * @return Question to be asked
+     * @return nclan.ac.ahart.quiz.Question to be asked
      */
     public String getQuestion() {
         return question;

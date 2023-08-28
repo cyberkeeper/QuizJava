@@ -1,3 +1,7 @@
+package nclan.ac.ahart.quiz;
+
+import nclan.ac.ahart.useful.FileAccess;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,7 +18,10 @@ public class Quiz {
      * if the user does not enter a name then they will be called this.
      */
     protected String DEFAULT_NAME = "Anon";
-
+    /**
+     * This is the default input filename for the application
+     */
+    protected String inputFilename = "/resources/scot-questions.csv";
     /**
      * Since each question could have a different number of points need to track max possible
      */
@@ -23,15 +30,6 @@ public class Quiz {
      * The questions for this quiz will be held here.
      */
     public ArrayList<Question> quizQuestions = new ArrayList();
-    /**
-     * The questions to ask the user.
-     */
-    protected String[] questions = {"What is the capital of Scotland?", "What is the longest loch?", "What is the highest mountain in Scotland?"};
-
-    /**
-     * The correct answers to the questions. All answers in lowercase so that user doesn't need to worry about capitalisation
-     */
-    protected String[] answers = {"edinburgh", "loch ness", "ben nevis"};
 
     /**
      * Main entry point for the program.
@@ -50,11 +48,22 @@ public class Quiz {
      * Constructor for the quiz. Set up the quiz. Create the instances of the questions.
      */
     public Quiz() {
-        //check how many question instances to create and use a loop to create all questions
-        int numQ = questions.length;
-        for (int i = 0; i < numQ; i++) {
-            Question newQ = new Question(questions[i], answers[i], 2);
-            quizQuestions.add(newQ);
+        try {
+            //read all data from the file
+            ArrayList<String> rows = FileAccess.readData(inputFilename);
+
+            //for each element in the arraylist split it into name and rating. Count those with a rating >= RATING_LIMIT
+            for (String row : rows) {
+                String[] details = row.split(",");
+                //convert rating string into a float, this could throw an exception at which point the program will end.
+                int points = Integer.parseInt(details[2]);
+                Question newQ = new Question(details[0], details[1], points);
+                quizQuestions.add(newQ);
+            }
+        } catch (Exception e) {
+            System.err.println("Aborting program!");
+            System.err.println("Exception thrown" + e.getMessage());
+            System.exit(1);
         }
     }
 
