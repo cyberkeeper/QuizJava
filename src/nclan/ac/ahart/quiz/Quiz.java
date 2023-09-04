@@ -1,16 +1,16 @@
 package nclan.ac.ahart.quiz;
 
-import nclan.ac.ahart.useful.FileAccess;
-
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import static nclan.ac.ahart.useful.FileAccess.readData;
 
 /**
  * Quiz program. Asks the user for their name, asks three questions and then displays the
  * total score to the user.This Quiz makes use of a Question class to keep question and answer.
  *
  * @author alan.hart
- * 28/08/2023
+ * 03/09/2023
  */
 public class Quiz {
 
@@ -29,7 +29,7 @@ public class Quiz {
     /**
      * The questions for this quiz will be held here.
      */
-    public ArrayList<Question> quizQuestions = new ArrayList();
+    public ArrayList<Question> quizQuestions = new ArrayList<>();
 
     /**
      * Main entry point for the program.
@@ -45,20 +45,44 @@ public class Quiz {
     }
 
     /**
-     * Constructor for the quiz. Set up the quiz. Create the instances of the questions.
+     * Constructor for the quiz. Set up the quiz. Create the instances of the questions. All question information is
+     * read in from the csv file.
      */
     public Quiz() {
         try {
             //read all data from the file
-            ArrayList<String> rows = FileAccess.readData(inputFilename);
+            ArrayList<String> rows = readData(inputFilename);
 
             //for each element in the arraylist split it into name and rating. Count those with a rating >= RATING_LIMIT
             for (String row : rows) {
                 String[] details = row.split(",");
-                //convert rating string into a float, this could throw an exception at which point the program will end.
-                int points = Integer.parseInt(details[2]);
-                Question newQ = new Question(details[0], details[1], points);
-                quizQuestions.add(newQ);
+
+                //switch on the value found in the first column
+                int typeOfQ = Integer.parseInt(details[0]);
+
+                switch (typeOfQ) {
+                    case 1 -> {
+                        //textual question
+                        int points = Integer.parseInt(details[3]);
+                        Question newQ = new Question(details[1], details[2], points);
+                        quizQuestions.add(newQ);
+                    }
+                    case 2 -> {
+                        //true/false question
+                        boolean answer = Boolean.parseBoolean(details[2]);
+                        Question newTF = new TrueFalseQuestion(details[1], answer);
+                        quizQuestions.add(newTF);
+                    }
+                    case 3 -> {
+                        //multiple-choice question
+                        String[] choices = details[4].split(";");
+                        int points = Integer.parseInt(details[3]);
+                        Question newMC = new MultipleChoiceQuestion(details[1], details[2], choices, points);
+                        quizQuestions.add(newMC);
+                    }
+                    default -> System.err.println("Question type not recognised.");
+                }
+
             }
         } catch (Exception e) {
             System.err.println("Aborting program!");
@@ -105,9 +129,13 @@ public class Quiz {
         int score = 0;
 
         System.out.println(q.getQuestion());
+        //System.out.println(q);
 
         //get the input user. Assumes everything will be a String type
         String answer = input.nextLine();
+
+        //update maximum possible score
+        maxPossibleScore = maxPossibleScore + q.getPoints();
 
         //if the user entered nothing then give them zero
         if (answer.length() < 1) {
@@ -119,8 +147,6 @@ public class Quiz {
             } else {
                 System.out.println(answer + " is the wrong answer. 0 points.");
             }
-            //update maximum possible score
-            maxPossibleScore = maxPossibleScore + q.getPoints();
         }
         return score;
     }

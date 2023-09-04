@@ -1,23 +1,23 @@
 package nclan.ac.ahart.quiz;
 
 /**
- * Class which defines a question.
+ * Class which defines a textual question.
  *
  * @author ahart
  */
 public class Question {
 
-    private String question;
-    private String answer;
+    private final String question;
+    private final String answer;
     private int points = 1;
 
     /**
      * Returns the question for this instance.
      *
-     * @return nclan.ac.ahart.quiz.Question to be asked
+     * @return Question to be asked
      */
     public String getQuestion() {
-        return question;
+        return question + " (" + points + " pts) ?";
     }
 
     /**
@@ -78,5 +78,19 @@ public class Question {
                 return true;
         }
         return false;
+    }
+
+
+    /**
+     * Return question, answer and points value.
+     * @return String for debug purposes.
+     */
+    @Override
+    public String toString() {
+        return "Question{" +
+                "question='" + question + '\'' +
+                ", answer='" + answer + '\'' +
+                ", points=" + points +
+                '}';
     }
 }
