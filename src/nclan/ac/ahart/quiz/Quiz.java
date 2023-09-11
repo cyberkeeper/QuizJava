@@ -1,6 +1,9 @@
 package nclan.ac.ahart.quiz;
 
+import nclan.ac.ahart.useful.FileAccess;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 import static nclan.ac.ahart.useful.FileAccess.readData;
@@ -96,6 +99,58 @@ public class Quiz {
      * Start the quiz
      */
     public void start() {
+        boolean firstRun = true;
+        boolean runAgain = true;
+        String name = getUserDetails();
+
+        while (runAgain) {
+            //if we are rerunning the quiz check if the same person or someone else
+            if (firstRun) {
+                System.out.println("Welcome " + name + " to the quiz of the century!");
+            } else {
+                //running the quiz for another attempt
+                boolean who = yesNoUserResponse("Is " + name + " still playing?");
+                if (who) {
+                    System.out.println("Try and beat your previous score.");
+                } else {
+                    name = getUserDetails();
+                    System.out.println("Welcome " + name + " to the quiz of the century!");
+                }
+            }
+
+            //shuffle the questions before asking and reset max possible score
+            Collections.shuffle(this.quizQuestions);
+            maxPossibleScore = 0;
+
+            //ask the questions and keep track of the score
+            int total = 0;
+            for (int i = 0; i < quizQuestions.size(); i++) {
+                System.out.print("Q" + (i + 1) + ": ");
+                total = total + askQuestion(quizQuestions.get(i));
+            }
+
+            System.out.println(name + " you scored " + total + "/" + maxPossibleScore);
+
+            //write results to file.
+            try {
+                FileAccess.writeData(name + ".csv", name + "," + total);
+            } catch (Exception e) {
+                System.err.println("Sorry, unable to save to file at this time.");
+            }
+
+            // do you want to rerun?
+            runAgain = yesNoUserResponse("Do you want to rerun the quiz?");
+            firstRun = false;
+        }
+        System.out.println("Thank you for playing.");
+    }
+
+    /**
+     * The details of the person playing the quiz
+     *
+     * @return The name of the person playing the quiz.
+     */
+    private String getUserDetails() {
         Scanner input = new Scanner(System.in);
 
         //get the user's name
@@ -103,19 +158,36 @@ public class Quiz {
         String name = input.nextLine();
 
         //if the user never entered a name give them a default name
-        if (name.length() < 1)
+        if (name.isEmpty())
             name = DEFAULT_NAME;
 
-        System.out.println("Welcome " + name + " to the quiz of the century!");
+        return name;
+    }
 
-        //ask the questions and keep track of the score
-        int total = 0;
-        for (int i = 0; i < quizQuestions.size(); i++) {
-            System.out.print("Q" + (i + 1) + ": ");
-            total = total + askQuestion(quizQuestions.get(i));
+    /**
+     * Ask the user to respond to a question that will have a yes or no answer. If nothing is entered or if the response
+     * starts with n or N then it is assumed the player entered a negative response.
+     *
+     * @param query A question that the user will answer yes or no to
+     * @return True to if response was yes, Yes, y or Y, false for anything else
+     */
+    private boolean yesNoUserResponse(String query) {
+        Scanner input = new Scanner(System.in);
+
+        //get the user's response
+        System.out.println(query + "\n(yes/no)");
+        String response = input.nextLine();
+
+        //if the user never entered a name give them a default name
+        if (response.isEmpty()) {
+            return false;
+        } else {
+            response = response.toLowerCase();
+            if (response.startsWith("n"))
+                return false;
         }
 
-        System.out.println(name + " you scored " + total + "/" + maxPossibleScore);
+        return true;
     }
 
     /**
