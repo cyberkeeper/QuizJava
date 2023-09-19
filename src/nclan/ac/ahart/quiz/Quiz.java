@@ -67,7 +67,7 @@ public class Quiz {
                     case 1 -> {
                         //textual question
                         int points = Integer.parseInt(details[3]);
-                        Question newQ = new Question(details[1], details[2], points);
+                        Question newQ = new TextQuestion(details[1], details[2], points);
                         quizQuestions.add(newQ);
                     }
                     case 2 -> {
@@ -101,20 +101,22 @@ public class Quiz {
     public void start() {
         boolean firstRun = true;
         boolean runAgain = true;
-        String name = getUserDetails();
+        //String name = getUserDetails();
+
+        Player livePlayer = new Player(getUserDetails(),"");
 
         while (runAgain) {
             //if we are rerunning the quiz check if the same person or someone else
             if (firstRun) {
-                System.out.println("Welcome " + name + " to the quiz of the century!");
+                System.out.println("Welcome " + livePlayer.getFirstName() + " to the quiz of the century!");
             } else {
                 //running the quiz for another attempt
-                boolean who = yesNoUserResponse("Is " + name + " still playing?");
+                boolean who = yesNoUserResponse("Is " + livePlayer.getFirstName() + " still playing?");
                 if (who) {
                     System.out.println("Try and beat your previous score.");
                 } else {
-                    name = getUserDetails();
-                    System.out.println("Welcome " + name + " to the quiz of the century!");
+                    livePlayer.setFirstName(getUserDetails());
+                    System.out.println("Welcome " + livePlayer.getFirstName() + " to the quiz of the century!");
                 }
             }
 
@@ -129,11 +131,14 @@ public class Quiz {
                 total = total + askQuestion(quizQuestions.get(i));
             }
 
-            System.out.println(name + " you scored " + total + "/" + maxPossibleScore);
+            //record latest score and print results
+            livePlayer.recordScore(total);
+            System.out.println(livePlayer.getFirstName() + " you scored " + livePlayer.getLastScore() + "/" + maxPossibleScore);
+
 
             //write results to file.
             try {
-                FileAccess.writeData(name + ".csv", name + "," + total);
+                FileAccess.writeData(livePlayer.getFirstName() + ".csv", livePlayer.getFirstName() + "," + total);
             } catch (Exception e) {
                 System.err.println("Sorry, unable to save to file at this time.");
             }
@@ -142,7 +147,9 @@ public class Quiz {
             runAgain = yesNoUserResponse("Do you want to rerun the quiz?");
             firstRun = false;
         }
-        System.out.println("Thank you for playing.");
+        System.out.println("Thank you for playing "+livePlayer.getFirstName());
+        System.out.println("Your last score: " + livePlayer.getLastScore());
+        System.out.println("Your best score: " + livePlayer.getHighestScore());
     }
 
     /**

@@ -39,7 +39,7 @@ public class Player extends Person {
         this(firstName, surname);
 
         //split the string by commas, parse to Integers and add to stack
-        String[] csvScores = scores.split(",");
+        String[] csvScores = scores.split(";");
         for (String val : csvScores) {
             try {
                 int iVal = Integer.parseInt(val);

@@ -5,7 +5,7 @@ package nclan.ac.ahart.quiz;
  *
  * @author ahart
  */
-public class Question {
+public abstract class Question {
 
     private final String question;
     private final String answer;
