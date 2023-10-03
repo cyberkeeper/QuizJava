@@ -9,7 +9,7 @@ import java.util.Scanner;
 import static nclan.ac.ahart.useful.FileAccess.readData;
 
 /**
- * Quiz program. Asks the user for their name, asks three questions and then displays the
+ * Quiz program. Asks the user for their name, asks questions and then displays the
  * total score to the user.This Quiz makes use of a Question class to keep question and answer.
  *
  * @author alan.hart
@@ -49,44 +49,12 @@ public class Quiz {
 
     /**
      * Constructor for the quiz. Set up the quiz. Create the instances of the questions. All question information is
-     * read in from the csv file.
+     * read in either from the csv file or database.
      */
     public Quiz() {
         try {
-            //read all data from the file
-            ArrayList<String> rows = readData(inputFilename);
-
-            //for each element in the arraylist split it into name and rating. Count those with a rating >= RATING_LIMIT
-            for (String row : rows) {
-                String[] details = row.split(",");
-
-                //switch on the value found in the first column
-                int typeOfQ = Integer.parseInt(details[0]);
-
-                switch (typeOfQ) {
-                    case 1 -> {
-                        //textual question
-                        int points = Integer.parseInt(details[3]);
-                        Question newQ = new TextQuestion(details[1], details[2], points);
-                        quizQuestions.add(newQ);
-                    }
-                    case 2 -> {
-                        //true/false question
-                        boolean answer = Boolean.parseBoolean(details[2]);
-                        Question newTF = new TrueFalseQuestion(details[1], answer);
-                        quizQuestions.add(newTF);
-                    }
-                    case 3 -> {
-                        //multiple-choice question
-                        String[] choices = details[4].split(";");
-                        int points = Integer.parseInt(details[3]);
-                        Question newMC = new MultipleChoiceQuestion(details[1], details[2], choices, points);
-                        quizQuestions.add(newMC);
-                    }
-                    default -> System.err.println("Question type not recognised.");
-                }
-
-            }
+            //quizQuestions = loadAndParseDataFromDatabase();
+            quizQuestions = loadAndParseDataFromFile();
         } catch (Exception e) {
             System.err.println("Aborting program!");
             System.err.println("Exception thrown" + e.getMessage());
@@ -94,16 +62,80 @@ public class Quiz {
         }
     }
 
+    /**
+     * Connect to database, read in all rows/questions and disconnect from database.
+     *
+     * @return ArrayList of Question objects.
+     * @throws Exception Any SQLExceptions thrown will be passed to caller
+     */
+    private ArrayList<Question> loadAndParseDataFromDatabase() throws Exception {
+
+        Database dbQuiz = new Database();
+        dbQuiz.connect();
+        ArrayList<Question> localQuestions = dbQuiz.getAllRows();
+        dbQuiz.disconnect();
+
+        //next line just for testing
+        //dbQuiz.insertRow(1,"Who ami","Alan",2,"");
+        return localQuestions;
+    }
 
     /**
-     * Start the quiz
+     * Open file. read all rows, parse into question objects and close file
+     *
+     * @return ArrayList of Question objects.
+     * @throws Exception Any Exceptions thrown will be passed to caller
+     */
+    private ArrayList<Question> loadAndParseDataFromFile() throws Exception {
+        //read all data from the file
+        ArrayList<String> rows = readData(inputFilename);
+        ArrayList<Question> localQuestions = new ArrayList<>();
+
+        //for each element in the arraylist split it into name and rating. Count those with a rating >= RATING_LIMIT
+        for (String row : rows) {
+            String[] details = row.split(",");
+
+            //switch on the value found in the first column
+            int typeOfQ = Integer.parseInt(details[0]);
+
+            switch (typeOfQ) {
+                case 1 -> {
+                    //textual question
+                    int points = Integer.parseInt(details[3]);
+                    Question newQ = new TextQuestion(details[1], details[2], points);
+                    localQuestions.add(newQ);
+                }
+                case 2 -> {
+                    //true/false question
+                    boolean answer = Boolean.parseBoolean(details[2]);
+                    Question newTF = new TrueFalseQuestion(details[1], answer);
+                    localQuestions.add(newTF);
+                }
+                case 3 -> {
+                    //multiple-choice question
+                    String[] choices = details[4].split(";");
+                    int points = Integer.parseInt(details[3]);
+                    Question newMC = new MultipleChoiceQuestion(details[1], details[2], choices, points);
+                    localQuestions.add(newMC);
+                }
+                default -> System.err.println("Question type not recognised.");
+            }
+
+        }
+        return localQuestions;
+    }
+
+
+    /**
+     * Start the quiz. Gets the username, asks the questions and keeps track of the current score and maximum
+     * possible score. The loop to ask if the user wants to play again is here. The player is asked if they are the
+     * same player retrying or if it is a different player attempting the quiz.
      */
     public void start() {
         boolean firstRun = true;
         boolean runAgain = true;
-        //String name = getUserDetails();
 
-        Player livePlayer = new Player(getUserDetails(),"");
+        Player livePlayer = new Player(getUserDetails(), "");
 
         while (runAgain) {
             //if we are rerunning the quiz check if the same person or someone else
@@ -147,13 +179,13 @@ public class Quiz {
             runAgain = yesNoUserResponse("Do you want to rerun the quiz?");
             firstRun = false;
         }
-        System.out.println("Thank you for playing "+livePlayer.getFirstName());
+        System.out.println("Thank you for playing " + livePlayer.getFirstName());
         System.out.println("Your last score: " + livePlayer.getLastScore());
         System.out.println("Your best score: " + livePlayer.getHighestScore());
     }
 
     /**
-     * The details of the person playing the quiz
+     * The details of the person playing the quiz. If no name is supplied default name is set.
      *
      * @return The name of the person playing the quiz.
      */
@@ -186,15 +218,12 @@ public class Quiz {
         String response = input.nextLine();
 
         //if the user never entered a name give them a default name
-        if (response.isEmpty()) {
-            return false;
-        } else {
+        if (!response.isEmpty()) {
             response = response.toLowerCase();
-            if (response.startsWith("n"))
-                return false;
+            return (response.startsWith("y"));
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -208,7 +237,6 @@ public class Quiz {
         int score = 0;
 
         System.out.println(q.getQuestion());
-        //System.out.println(q);
 
         //get the input user. Assumes everything will be a String type
         String answer = input.nextLine();

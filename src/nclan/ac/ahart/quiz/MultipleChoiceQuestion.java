@@ -1,6 +1,8 @@
 package nclan.ac.ahart.quiz;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Class which defines a multiple-choice question.
@@ -51,13 +53,18 @@ public class MultipleChoiceQuestion extends Question {
     public String getQuestion() {
         StringBuilder output = new StringBuilder(super.getQuestion() + "\n");
 
+        //build up the options the user can pick from, allows multiple choice questions with more or less options.
+        StringBuilder userOptions = new StringBuilder("(Answer ");
         //add on each option prefixed by a number
         for (int i = 0; i < this.options.size(); i++) {
             output.append(i + 1).append(": ");
             output.append(options.get(i)).append("\n");
+            userOptions.append((i+1)).append(",");
         }
+        //finish up the user options, remove last comma and add closing bracket
+        userOptions.deleteCharAt(userOptions.length()-1).append(")");
 
-        output.append("(Answer 1,2,3,4)");
+        output.append(userOptions);
 
         return output.toString();
     }

@@ -28,7 +28,7 @@ public class Address {
     }
 
     /**
-     * Return a single string showing the address
+     * Return a single string showing the address properly formatted.
      * @return Formatted String showing full address.
      */
     @Override

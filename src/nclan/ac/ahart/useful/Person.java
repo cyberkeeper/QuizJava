@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 /**
- * Class to hold generic person information. Uses a LocalDate type variable to hold the data of birth.
+ * Class to hold generic person information. Uses a LocalDate type variable to hold the date of birth.
  *
  * @author ahart
  */
@@ -15,8 +15,8 @@ public class Person {
     private Address address;
 
     /**
-     * Basic constructor allows creation of a person using name only. Assumption that is other information is required
-     * the program will add it using setter methods.
+     * Basic constructor allows creation of a person using name only. Assumption is that the other
+     * information required by the program will have it added using setter methods.
      *
      * @param firstName first name
      * @param surname   surname
@@ -30,13 +30,16 @@ public class Person {
         return firstName;
     }
 
+    public String getFullname() {
+        return firstName + " " + surname;
+    }
+
     /**
      * Allow first name to be updated, in case of typo or name change.
      *
      * @param firstName person's first name
      */
     public void setFirstName(String firstName) {
-
         this.firstName = firstName;
     }
 
@@ -71,7 +74,7 @@ public class Person {
      *
      * @param dateOfBirth Expects String in format "yyyy-MM-dd".
      * @throws Exception if the supplied string can not be parsed to a date then an exception is thrown and no date of
-     *                   birth is set.
+     *                   birth is set. If nothing supplied set date of birth to today.
      */
     public void setDateOfBirth(String dateOfBirth) throws Exception {
         //check if a date of birth string was supplied before trying to split it
@@ -85,7 +88,7 @@ public class Person {
             } else {
                 throw new Exception("Date of birth supplied in wrong format.");
             }
-        }else {
+        } else {
             this.dateOfBirth = LocalDate.now();
         }
     }
