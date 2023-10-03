@@ -2,6 +2,7 @@ package nclan.ac.ahart.quiz;
 
 import nclan.ac.ahart.useful.FileAccess;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -10,7 +11,10 @@ import static nclan.ac.ahart.useful.FileAccess.readData;
 
 /**
  * Quiz program. Asks the user for their name, asks questions and then displays the
- * total score to the user.This Quiz makes use of a Question class to keep question and answer.
+ * total score to the user. Questions can be of variety of types all of which are child classes
+ * of Question class. The questions are loaded in from a csv file but code is present
+ * to allow connection to a MySQL database, this database access functionality is commented out by
+ * default but can be enabled when required.
  *
  * @author alan.hart
  * 03/09/2023
@@ -25,6 +29,7 @@ public class Quiz {
      * This is the default input filename for the application
      */
     protected String inputFilename = "/resources/scot-questions.csv";
+    //protected String inputFilename = "/resources/glasgow-questions.csv";
     /**
      * Since each question could have a different number of points need to track max possible
      */
@@ -58,6 +63,7 @@ public class Quiz {
         } catch (Exception e) {
             System.err.println("Aborting program!");
             System.err.println("Exception thrown" + e.getMessage());
+            //An exit code of 1 indicates an error
             System.exit(1);
         }
     }
@@ -125,11 +131,10 @@ public class Quiz {
         return localQuestions;
     }
 
-
     /**
-     * Start the quiz. Gets the username, asks the questions and keeps track of the current score and maximum
-     * possible score. The loop to ask if the user wants to play again is here. The player is asked if they are the
-     * same player retrying or if it is a different player attempting the quiz.
+     * Start the quiz. Gets the username, asks the questions and keeps track of the current score and
+     * maximum possible score. The loop to ask if the user wants to play again is here. The player
+     * is asked if they are the same player retrying or if it is a different player attempting the quiz.
      */
     public void start() {
         boolean firstRun = true;
@@ -140,6 +145,7 @@ public class Quiz {
         while (runAgain) {
             //if we are rerunning the quiz check if the same person or someone else
             if (firstRun) {
+                //running the quiz for a new player
                 System.out.println("Welcome " + livePlayer.getFirstName() + " to the quiz of the century!");
             } else {
                 //running the quiz for another attempt
@@ -179,6 +185,8 @@ public class Quiz {
             runAgain = yesNoUserResponse("Do you want to rerun the quiz?");
             firstRun = false;
         }
+
+        //print out all the results from the quiz
         System.out.println("Thank you for playing " + livePlayer.getFirstName());
         System.out.println("Your last score: " + livePlayer.getLastScore());
         System.out.println("Your best score: " + livePlayer.getHighestScore());
@@ -204,8 +212,9 @@ public class Quiz {
     }
 
     /**
-     * Ask the user to respond to a question that will have a yes or no answer. If nothing is entered or if the response
-     * starts with n or N then it is assumed the player entered a negative response.
+     * Ask the user to respond to a question that will have a yes or no answer. If nothing is entered
+     * or if the response starts with y or Y then it is assumed the player entered a positive
+     * response. Anything not starting with a y is deemed to be a negative answer.
      *
      * @param query A question that the user will answer yes or no to
      * @return True to if response was yes, Yes, y or Y, false for anything else
@@ -227,7 +236,7 @@ public class Quiz {
     }
 
     /**
-     * Ask the user a question.
+     * Ask the user a question. Check the answer.
      *
      * @param q Instance of the Question class. This contains the question and the correct answer
      * @return integer value of 1 for correct answer else 0 for wrong answer.

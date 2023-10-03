@@ -13,6 +13,7 @@ public class Address {
     /**
      * Create a new instance of address. Assumes that every house has a number. No checks are made on postcode to check
      * for length, and good formatting.
+     *
      * @param houseNumber house number
      * @param street      street name
      * @param town        town
@@ -29,10 +30,11 @@ public class Address {
 
     /**
      * Return a single string showing the address properly formatted.
+     *
      * @return Formatted String showing full address.
      */
     @Override
     public String toString() {
-        return houseNumber +" "+ street + ",\n" + town + ",\n" + county + ",\n" + postcode + ".";
+        return houseNumber + " " + street + ",\n" + town + ",\n" + county + ",\n" + postcode + ".";
     }
 }

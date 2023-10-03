@@ -27,12 +27,12 @@ public class Player extends Person {
     }
 
     /**
-     * Constructor which calls takes in the name and also a csv formatted string of previous scores. If there is a
-     * problem with the scores format then the stack will be populated with valid values. Badly formatted or wrong
-     * data types will be ignored.
+     * Constructor which calls takes in the name and also a formatted string of previous scores, each integer
+     * score is separated by ;. If there is a problem with the scores format then the stack will be populated
+     * with valid values. Badly formatted or wrong data types will be ignored.
      *
-     * @param firstName
-     * @param surname
+     * @param firstName first name
+     * @param surname   surname
      * @param scores    String of comma separated integer values.
      */
     public Player(String firstName, String surname, String scores) {
@@ -61,7 +61,8 @@ public class Player extends Person {
     }
 
     /**
-     * Query what was the most recent score for the player. Peeks at the stack to see latest value
+     * Query what was the most recent score for the player. Peeks at the stack to see latest value, nothing
+     * is removed.
      *
      * @return most recent score
      */

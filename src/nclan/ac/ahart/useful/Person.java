@@ -26,10 +26,20 @@ public class Person {
         this.surname = surname;
     }
 
+    /**
+     * Get the Person's first name
+     *
+     * @return first name
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Get the full name of the Person
+     *
+     * @return Returns string in format of "firstname surname"
+     */
     public String getFullname() {
         return firstName + " " + surname;
     }
@@ -43,6 +53,11 @@ public class Person {
         this.firstName = firstName;
     }
 
+    /**
+     * Get the Person's surname.
+     *
+     * @return Surname
+     */
     public String getSurname() {
         return surname;
     }
@@ -54,6 +69,11 @@ public class Person {
         this.surname = surname;
     }
 
+    /**
+     * Get the person's date of birth.
+     *
+     * @return Date of birth.
+     */
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }

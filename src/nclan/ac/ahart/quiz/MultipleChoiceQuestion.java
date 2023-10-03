@@ -5,7 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Class which defines a multiple-choice question.
+ * Class which defines a multiple-choice question. The question is flexible and can a variety of
+ * different answers that the player can select from. The player selects their answer by entering the
+ * number associated with the answer they wish to submit. The options are shuffled when the question
+ * is created.
  *
  * @author ahart
  */
@@ -59,10 +62,10 @@ public class MultipleChoiceQuestion extends Question {
         for (int i = 0; i < this.options.size(); i++) {
             output.append(i + 1).append(": ");
             output.append(options.get(i)).append("\n");
-            userOptions.append((i+1)).append(",");
+            userOptions.append((i + 1)).append(",");
         }
         //finish up the user options, remove last comma and add closing bracket
-        userOptions.deleteCharAt(userOptions.length()-1).append(")");
+        userOptions.deleteCharAt(userOptions.length() - 1).append(")");
 
         output.append(userOptions);
 

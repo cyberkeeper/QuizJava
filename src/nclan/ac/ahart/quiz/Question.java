@@ -1,7 +1,9 @@
 package nclan.ac.ahart.quiz;
 
 /**
- * Class which defines a textual question.
+ * Class which defines a textual question. This is the super class for all types of question. If a textual
+ * question is to be used, use a TextQuestion instance. The TextQuestion is a child class of Question and was
+ * added to give better structure and clearer naming convention.
  *
  * @author ahart
  */

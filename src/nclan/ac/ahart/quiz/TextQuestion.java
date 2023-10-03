@@ -1,6 +1,10 @@
 package nclan.ac.ahart.quiz;
 
-public class TextQuestion extends Question{
+/**
+ * Text based question. This duplicates the functionality of the Question class. This class was added to provide
+ * greater clarity in the naming of questions.
+ */
+public class TextQuestion extends Question {
     /**
      * Constructor. Use this to set up the instance of a question. This is the only way to set the question and the
      * answer. Makes the answer lowercase for ease of checking.

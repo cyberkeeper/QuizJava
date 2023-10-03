@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * Database class. Contains methods for connecting to, retrieving from and inserting into the question table in a
- * database called quiz.
+ * database called quiz. The methods are specific to a database and tables for the Quiz application.
  *
  * @author ahart
  */

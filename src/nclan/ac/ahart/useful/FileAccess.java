@@ -69,4 +69,65 @@ public class FileAccess {
             }
         }
     }
+
+    /**
+     * Read data from a file. This works with single files but won't work for loading files from a Jar.
+     *
+     * @param filename The file to be read in from.
+     * @return ArrayList of each line in the file.
+     * @throws Exception Any errors are thrown up to be dealt with.
+     */
+    static public ArrayList<String> readFromFile(String filename) throws Exception {
+        ArrayList rows = new ArrayList();
+        try {
+            FileReader myReader = new FileReader(filename);
+            BufferedReader myBuffer = new BufferedReader(myReader);
+
+            String line;
+            while ((line = myBuffer.readLine()) != null) {
+                rows.add(line);
+            }
+            myBuffer.close();
+        } catch (FileNotFoundException fnfe) {
+            throw new Exception("Exception thrown: " + fnfe.getMessage());
+        } catch (IOException ioe) {
+            throw new Exception("Exception thrown: " + ioe.getMessage());
+        }
+        return rows;
+    }
+
+    /**
+     * Write data to the specified file. The existing contents of the file are overwritten.
+     *
+     * @param filename Name of file to write data to.
+     * @param data     The data to be written to the file.
+     * @throws Exception Any errors are thrown up to the calling method to be dealt with.
+     */
+    static public void writeToFile(String filename, String data) throws Exception {
+        writeToFile(filename, data, false);
+    }
+
+    /**
+     * Write data to the specified file. The contents of the file can be overwritten or appended to as
+     * required.
+     *
+     * @param filename NAme of the file to write date to.
+     * @param data     The data to be written to the file
+     * @param append   The contents of the file will be overwritten if this is false else the contents of the file
+     *                 will be appended to.
+     * @throws Exception
+     */
+    static public void writeToFile(String filename, String data, boolean append) throws Exception {
+        try {
+            FileWriter myWriter = new FileWriter(filename, append);
+
+            BufferedWriter outputBuffer = new BufferedWriter(myWriter);
+
+            outputBuffer.write(data);
+
+            outputBuffer.close();
+        } catch (IOException ioe) {
+            throw new Exception("Exception thrown: " + ioe.getMessage());
+        }
+    }
 }
