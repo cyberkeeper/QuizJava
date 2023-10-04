@@ -22,9 +22,20 @@ The format of the csv file is,
 | 2 - true/ false     | Text     | Text   | Defaults to 1 |                     |
 | 3 - multiple choice | Text     | Text   | Number        | ; separated options |
 
+
+### Database format
+XAMPP was installed to test database connectivity with a MySQL compatible database, MariaDB v10.4.27. A database called quiz was created. The table to hold the questions was created using the following SQL,
+
+`CREATE TABLE `quiz`.`question` (`type` INT(4) NOT NULL , `question` VARCHAR(128) NOT NULL , `answer` VARCHAR(128) NOT NULL , `points` INT(4) NOT NULL , `multichoice` VARCHAR(256) NULL ) ENGINE = InnoDB;`
+
+
 ## Design
-The code matches the design documents supplied in the tutorials. There
-The code has been designed to be easy to maintain and expand. 
+The code matches the design documents supplied in the tutorials. The code has been designed to be easy to maintain and expand. 
+
+
+## Environment
+The code was written in JetBrains IntelliJ Community edition v2023.2. The SDK was Oracle Open JDK20, level 20 "No new language features". The operating system used was Microsoft Windows 10 and 11. The Jar file was tested by running in a non-adminisrator Powershell mode.
+
 
 ## Usage
 The Quiz is run from the command line. Run the quiz by typing,
