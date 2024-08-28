@@ -23,21 +23,24 @@ public class FileAccess {
         //String path = System.getProperty("user.dir");
         //System.out.println("Current folder: " + path);
 
-        ArrayList rows = new ArrayList();
+        ArrayList<String> rows = new ArrayList<>();
 
         try {
-            Class FA = FileAccess.class;
+            Class<FileAccess> FA = FileAccess.class;
             InputStream inStream = FA.getResourceAsStream(filename);
-            BufferedReader myBuffer = new BufferedReader(new InputStreamReader(inStream));
-            String line;
 
-            //keep reading lines until the line read is null, every line is added as an element to the arraylist
-            while ((line = myBuffer.readLine()) != null) {
-                rows.add(line);
+            if(inStream!=null) {
+                BufferedReader myBuffer = new BufferedReader(new InputStreamReader(inStream));
+                String line;
+
+                //keep reading lines until the line read is null, every line is added as an element to the arraylist
+                while ((line = myBuffer.readLine()) != null) {
+                    rows.add(line);
+                }
+                myBuffer.close();
+            }else{
+                throw new Exception("Reading exception: input stream is null");
             }
-            myBuffer.close();
-        } catch (FileNotFoundException fnfe) {
-            throw new Exception("Reading exception: " + fnfe.getMessage());
         } catch (IOException ioe) {
             throw new Exception("Reading exception: " + ioe.getMessage());
         }
@@ -52,14 +55,14 @@ public class FileAccess {
      * @throws Exception throws IOException
      */
     static public void writeData(String filename, String data) throws Exception {
-        if (filename == null || filename.length() == 0) {
+        if (filename == null || filename.isBlank()) {
             throw new Exception("No filename supplied");
-        } else if (data == null || filename.length() == 0) {
+        } else if (data == null || filename.isEmpty()) {
             throw new Exception("No data was supplied");
         } else {
             //got here so we have a filename and some data
             try {
-                //set the append parameter in FileWriter to False to make it overwrite any existing file contents.
+                //set the append parameter in FileWriter equal to the value false, to make it overwrite any existing file contents.
                 FileWriter myWriter = new FileWriter(filename, false);
                 BufferedWriter myBuffer = new BufferedWriter(myWriter);
                 myBuffer.write(data);
@@ -78,7 +81,7 @@ public class FileAccess {
      * @throws Exception Any errors are thrown up to be dealt with.
      */
     static public ArrayList<String> readFromFile(String filename) throws Exception {
-        ArrayList rows = new ArrayList();
+        ArrayList<String> rows = new ArrayList<>();
         try {
             FileReader myReader = new FileReader(filename);
             BufferedReader myBuffer = new BufferedReader(myReader);
@@ -88,9 +91,7 @@ public class FileAccess {
                 rows.add(line);
             }
             myBuffer.close();
-        } catch (FileNotFoundException fnfe) {
-            throw new Exception("Exception thrown: " + fnfe.getMessage());
-        } catch (IOException ioe) {
+        }catch (IOException ioe) {
             throw new Exception("Exception thrown: " + ioe.getMessage());
         }
         return rows;
@@ -115,7 +116,7 @@ public class FileAccess {
      * @param data     The data to be written to the file
      * @param append   The contents of the file will be overwritten if this is false else the contents of the file
      *                 will be appended to.
-     * @throws Exception
+     * @throws Exception If any IOException occurs catch and throw as exception
      */
     static public void writeToFile(String filename, String data, boolean append) throws Exception {
         try {

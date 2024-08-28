@@ -37,9 +37,7 @@ public class MultipleChoiceQuestion extends Question {
         super(question, answer, points);
 
         //populate list with all options and the correct answer, then randomise the list
-        for (String choice : options) {
-            this.options.add(choice);
-        }
+        Collections.addAll(this.options, options);
         this.options.add(answer);
         Collections.shuffle(this.options);
 
@@ -87,7 +85,7 @@ public class MultipleChoiceQuestion extends Question {
             if (correctIndex == userIndex)
                 isCorrect = true;
         } catch (Exception e) {
-            isCorrect = false;
+            //isCorrect already set to false in declaration so no need to change
         }
         return isCorrect;
     }

@@ -2,7 +2,6 @@ package nclan.ac.ahart.quiz;
 
 import nclan.ac.ahart.useful.FileAccess;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;

@@ -81,7 +81,7 @@ public class Database {
                 }
                 case 3 -> {
                     //multiple-choice question
-                    String[] choices = rs.getString("multichoice").split(";");
+                    String[] choices = rs.getString("multi-choice").split(";");
                     Question newMC = new MultipleChoiceQuestion(quest, ans, choices, pts);
                     quizQuestions.add(newMC);
                 }
@@ -98,19 +98,19 @@ public class Database {
     /**
      * Insert a new question into the database
      *
-     * @param typeOfQ     Indicates Text, TrueFalse or Multichoice question
+     * @param typeOfQ     Indicates Text, TrueFalse or multi-choice question
      * @param quest       Question to ask
      * @param ans         Answer to question
      * @param pts         The number of points for a correct answer, if nothing supplied this will be 1
-     * @param multichoice Only used for multiple choice questions. Supply the wrong answers in ; separated string format
+     * @param multiChoice Only used for multiple choice questions. Supply the wrong answers in ; separated string format
      * @throws SQLException provide details of what went wrong
      */
-    public void insertRow(int typeOfQ, String quest, String ans, int pts, String multichoice) throws SQLException {
-        String sqlInsertQuestion = "INSERT INTO question (answer, multichoice, points, question, type) VALUES (?,?,?,?,?)";
+    public void insertRow(int typeOfQ, String quest, String ans, int pts, String multiChoice) throws SQLException {
+        String sqlInsertQuestion = "INSERT INTO question (answer, multiChoice, points, question, type) VALUES (?,?,?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sqlInsertQuestion);
 
         ps.setString(1, ans);
-        ps.setString(2, multichoice);
+        ps.setString(2, multiChoice);
         ps.setInt(3, pts);
         ps.setString(4, quest);
         ps.setInt(5, typeOfQ);

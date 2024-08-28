@@ -76,8 +76,7 @@ public abstract class Question {
         if (userSays != null && userSays.length() > 0) {
             //make user's answer lowercase and compare with the correct answer
             userSays = userSays.toLowerCase();
-            if (userSays.equals(getAnswer()))
-                return true;
+            return userSays.equals(getAnswer());
         }
         return false;
     }
